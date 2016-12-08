@@ -1,4 +1,4 @@
-FROM php:5.6.28-fpm
+FROM creativeprojects/php-fpm:5.6.28
 
 ARG USER_ID=1000
 ARG GROUP_ID=50
@@ -8,16 +8,6 @@ EXPOSE 9000
 RUN groupdel staff
 RUN groupadd -f -o -g $GROUP_ID staff
 RUN useradd -m -s /bin/bash -u $USER_ID -g staff docker
-
-RUN apt-get update && apt-get install -y \
-        libbz2-dev \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng12-dev \
-    && docker-php-ext-install bz2 calendar exif gettext mbstring mcrypt mysqli pdo_mysql sockets zip \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include --with-jpeg-dir=/usr/include \
-    && docker-php-ext-install gd
 
 ADD php-fpm.conf /usr/local/etc
 
