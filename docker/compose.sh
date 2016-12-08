@@ -4,7 +4,7 @@
 
 cd $(dirname "${0}")
 BASEDIR=$(pwd -L)
-VOLUME=$BASEDIR/www
+VOLUME=$BASEDIR/../www
 
 echo "The volume is shared from this local folder: $VOLUME"
 
