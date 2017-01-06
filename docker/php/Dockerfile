@@ -5,9 +5,9 @@ ARG GROUP_ID=50
 
 EXPOSE 9000
 
-RUN groupdel staff
-RUN groupadd -f -o -g $GROUP_ID staff
-RUN useradd -m -s /bin/bash -u $USER_ID -g staff docker
+RUN groupdel staff \
+ && groupadd -f -o -g $GROUP_ID staff \
+ && useradd -m -s /bin/bash -u $USER_ID -g staff docker
 
 ADD php-fpm.conf /usr/local/etc
 
