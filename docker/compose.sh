@@ -4,15 +4,17 @@
 
 cd $(dirname "${0}")
 BASEDIR=$(pwd -L)
-VOLUME=$BASEDIR/../www
+VOLUME=$BASEDIR/../phpBB3
+
+. ./config.sh
 
 echo "The volume is shared from this local folder: $VOLUME"
 
-echo "Starting our containers..."
-docker run -d --name=phpbb_creativeprojects_mysql phpbb_creativeprojects/mysql-server
+echo "Starting containers..."
+docker run -d --name=$MYSQL_CONTAINER $MYSQL_IMAGE
 # You can uncomment this line if you need phpmyadmin: It will be available on port 8080
-# docker run -d -p 8080:80 --link phpbb_creativeprojects_mysql:db --name phpmyadmin phpmyadmin/phpmyadmin
-docker run -d --link phpbb_creativeprojects_mysql:db -v $VOLUME:/var/www/html --name phpbb_creativeprojects_php phpbb_creativeprojects/php
-docker run -d -p 127.0.3.1:80:80 --link phpbb_creativeprojects_php:fpm -v $VOLUME:/var/www/html --name phpbb_creativeprojects_nginx phpbb_creativeprojects/nginx
+docker run -d -p $EXPOSE_IP_ADDRESS:8080:80 --link $MYSQL_CONTAINER:db --name $PHPMYADMIN_CONTAINER $PHPMYADMIN_IMAGE
+docker run -d --link $MYSQL_CONTAINER:db -v $VOLUME:/var/www/html --name $PHP_CONTAINER $PHP_IMAGE
+docker run -d -p $EXPOSE_IP_ADDRESS:80:80 --link $PHP_CONTAINER:fpm -v $VOLUME:/var/www/html --name $NGINX_CONTAINER $NGINX_IMAGE
 
 cd - >/dev/null
